@@ -8,7 +8,7 @@ export default function Contact() {
           Open to senior mobile engineering roles, contract work, and interesting collaborations. Based in Islamabad, Pakistan — available remotely worldwide.
         </p>
 
-        <div className="grid sm:grid-cols-3 gap-4 max-w-2xl">
+        <div className="grid sm:grid-cols-3 gap-4 max-w-3xl">
           <a href="mailto:aliibraheem8886@gmail.com"
             className="bg-white rounded-2xl p-5 border border-slate-100 card-shadow hover:border-indigo-200 hover:card-shadow-hover transition-all group">
             <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-indigo-100 transition-colors">

@@ -6,6 +6,7 @@ import Projects from './components/Projects';
 import CaseStudies from './components/CaseStudies';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <footer className="py-8 px-6 border-t border-slate-100 text-center bg-white">
         <p className="text-slate-400 text-sm font-mono">Built by Ali Ibraheem · 2026</p>
       </footer>
+      <Analytics />
     </div>
   );
 }

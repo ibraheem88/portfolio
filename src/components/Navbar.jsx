@@ -24,7 +24,7 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-        <a href="mailto:aliibraheem8886@gmail.com"
+        <a href="mailto:aliibraheem888@outlook.com"
           className="hidden md:block px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
           Hire Me
         </a>
@@ -44,7 +44,7 @@ export default function Navbar() {
               {l}
             </a>
           ))}
-          <a href="mailto:aliibraheem8886@gmail.com"
+          <a href="mailto:aliibraheem888@outlook.com"
             className="mt-3 block text-center px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg">
             Hire Me
           </a>

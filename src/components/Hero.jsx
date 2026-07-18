@@ -70,7 +70,7 @@ export default function Hero() {
             <a href="https://github.com/ibraheem88" target="_blank" rel="noreferrer"
               className="text-slate-400 hover:text-indigo-600 transition-colors text-sm font-medium">GitHub</a>
             <span className="text-slate-200">|</span>
-            <a href="mailto:aliibraheem8886@gmail.com"
+            <a href="mailto:aliibraheem888@outlook.com"
               className="text-slate-400 hover:text-indigo-600 transition-colors text-sm font-medium">Email</a>
           </div>
         </div>

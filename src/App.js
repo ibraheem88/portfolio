@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import About from './components/About';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import CaseStudies from './components/CaseStudies';
@@ -8,19 +10,38 @@ import Skills from './components/Skills';
 import Contact from './components/Contact';
 import { Analytics } from "@vercel/analytics/react"
 
+function useShutterReveal() {
+  useEffect(() => {
+    const panels = document.querySelectorAll('.shutter');
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.documentElement.classList.add('js');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-open');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.18 });
+    panels.forEach(p => io.observe(p));
+    return () => io.disconnect();
+  }, []);
+}
+
 function App() {
+  useShutterReveal();
   return (
-    <div className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen bg-ink text-bone">
       <Navbar />
-      <Hero />
-      <Experience />
-      <Projects />
-      <CaseStudies />
-      <Skills />
-      <Contact />
-      <footer className="py-8 px-6 border-t border-slate-100 text-center bg-white">
-        <p className="text-slate-400 text-sm font-mono">Built by Ali Ibraheem · 2026</p>
-      </footer>
+      <main>
+        <Hero />
+        <Projects />
+        <CaseStudies />
+        <Experience />
+        <About />
+        <Skills />
+        <Contact />
+      </main>
       <Analytics />
     </div>
   );

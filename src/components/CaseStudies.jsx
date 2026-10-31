@@ -1,194 +1,156 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const cases = [
+const featured = [
   {
+    title: 'Live Activities for incoming calls',
+    project: 'Code Huddle',
+    stack: ['Swift', 'ActivityKit', 'WidgetKit', 'APNs', 'Expo Modules'],
+    body: "A lock screen and Dynamic Island countdown for one on one calls, started from JS when the app is open and through APNs push to start (iOS 17.2+) when it is backgrounded or killed. I owned the ActivityAttributes and ContentState model, the request, update and end lifecycle with duplicate collapse, a custom UNUserNotificationCenter wrapper around Firebase for silent FCM wake, Keychain JWT storage, a URLSession background upload of the push token, the thin Expo native module bridge and the Xcode widget extension.",
+    visual: 'island',
+  },
+  {
+    title: 'Music during live calls on iOS',
     project: 'Gymyg',
-    tagline: 'Live Virtual Fitness Platform',
-    url: 'https://gymyg.fit',
-    color: 'from-violet-500 to-indigo-600',
-    stack: ['React Native', 'Daily SDK', 'WebRTC', 'Track Player', 'Swift', 'AVAudioSession', 'Expo EAS'],
-    problem: "Moving a WebRTC-based video calling system from web to React Native introduced challenges that appeared in both testing and production. Some errors only surfaced under specific device combinations, network conditions, or timing scenarios — making root cause analysis time-consuming and methodical.\n\nThe deeper issues included race conditions between local music playback via React Native Track Player and live VoIP audio streams, native iOS audio session conflicts causing dropped calls, camera stretching and orientation failures on iOS, and video flickering on Android. These required deep debugging, documentation analysis, and community research to fully resolve.",
-    solution: "Rather than working around issues at the React Native layer, I went deeper. I patched the React Native WebRTC library directly to override AVAudioSession mode for the specific audio use case. Proper iOS audio session management was implemented to handle conflicts between music playback and VoIP streams. Platform-specific fixes were applied for camera behavior on iOS and rendering on Android.\n\nThe video calling interface had significant complexity — tile shuffling every few seconds based on active speaker detection, one-on-one sessions running inside an active group call, and parallel one-on-one calls running simultaneously. Each of these introduced edge cases that could cause crashes or degraded experience if not handled precisely.",
-    responsibilities: [
-      "Migrated the full video calling module from web to React Native using Daily SDK",
-      "Patched React Native WebRTC library to override AVAudioSession mode for custom audio handling",
-      "Resolved production race conditions between React Native Track Player and live VoIP streams",
-      "Fixed native iOS camera stretching, orientation handling, and audio session conflicts",
-      "Resolved Android video flickering under real network and device conditions",
-      "Built and stabilized active-speaker tile shuffling, one-on-one sessions inside group calls, and parallel calls",
-      "Implemented Expo EAS for automated builds and OTA updates — reduced build time 30–40%",
-    ],
-    results: [
-      "20–25% faster load times vs. the web version",
-      "Stable live group sessions tested with 20+ concurrent users in real video workout sessions",
-      "Significantly reduced crash rate in production",
-      "Full feature parity across iOS and Android",
-    ],
-  },
-  {
-    project: 'Budget Nest',
-    tagline: 'AI-Powered Personal Finance App',
-    url: 'https://budget-nest.com',
-    color: 'from-emerald-500 to-teal-600',
-    stack: ['React Native', 'Expo EAS', 'Swift', 'App Intents Extensions', 'Node.js', 'AI APIs', 'WhatsApp API'],
-    problem: "Most finance apps fail at adoption because they require too much manual input. The vision for Budget Nest was to let users log expenses the way they already communicate — through a familiar messaging interface — and have AI handle the rest.\n\nThis introduced two non-trivial technical challenges. First, processing messages containing text, voice, and images required an AI pipeline that could reliably extract structured financial data from unstructured input. Second, SMS-based transaction parsing on iOS is heavily restricted by Apple's privacy framework — building this feature required working within App Intents Extensions, which don't persist by default during Expo prebuild, creating a native module integration problem with no existing documented solution.",
-    solution: "Messaging-based expense logging was built as the primary input method, with AI processing handling text, voice transcription, and receipt image extraction to produce structured expense entries automatically.\n\nFor SMS parsing, a privacy-compliant implementation was built using iOS App Intents Extensions in Swift — staying within Apple's security boundaries. Since App Intents Extensions don't survive Expo's prebuild process by default, a custom Expo plugin was developed from scratch to ensure the extension persisted correctly through automated builds, making the feature stable across Expo EAS workflows.",
-    responsibilities: [
-      "Built full cross-platform app with React Native and Expo for iOS and Android",
-      "Implemented messaging-based expense logging supporting text, voice notes, and receipt images processed via AI",
-      "Built privacy-compliant SMS transaction parsing using iOS App Intents Extensions in Swift",
-      "Developed a custom Expo plugin to persist App Intents Extension through Expo prebuild — no existing solution documented",
-      "Designed multi-wallet and budget management architecture for scalable financial data organization",
-      "Ensured secure handling of sensitive financial and user data throughout",
-    ],
-    results: [
-      "Zero manual data entry for supported transaction types",
-      "Privacy-compliant SMS parsing within Apple's strict iOS security framework",
-      "Custom Expo plugin solved a native module persistence problem with no prior documented solution",
-      "Multi-wallet and budget system ready for production scale",
-    ],
-  },
-  {
-    project: 'HBCUMADE',
-    tagline: 'Alumni Networking & Career Platform',
-    url: 'https://hbcumade.app',
-    color: 'from-orange-500 to-rose-600',
-    stack: ['React Native', 'Node.js', 'MongoDB', 'AWS', 'Stripe Connect', 'Agora', 'WebSockets', 'OAuth2', 'Eventbrite API'],
-    problem: "Owning every complex layer of a community platform simultaneously — backend, database, cloud infrastructure, payments, and third-party integrations — meant the integration surface was unusually wide. Each integration had its own authentication flow, rate limits, webhook behavior, and failure modes that needed to be handled correctly in production.\n\nSecurity was also a real concern — a community platform with user-generated content, financial transactions, and live events needed abuse prevention and rate limiting built in from the start, not added later.",
-    solution: "The mobile app was built with React Native for iOS and Android, with a Node.js and MongoDB backend deployed on AWS. Database schemas were designed using outlier and referencing patterns to handle relational community data efficiently at scale.\n\nThird-party integrations were tackled systematically — OAuth2 social auth for Instagram, LinkedIn, and Twitter; API integrations with Eventbrite and Posh for live event imports; Agora for live audio streaming; and Stripe Connect for multi-party event ticketing and creator payouts. Rate limiting and abuse prevention were implemented at the backend level before launch.",
-    responsibilities: [
-      "Primary engineer — owned backend architecture, all third-party integrations, real-time systems, payments, and AWS infrastructure",
-      "Built social feed, groups, direct messaging, and real-time group chat using WebSockets",
-      "Implemented live audio streaming and interactive event rooms using Agora",
-      "Integrated Instagram, LinkedIn, and Twitter APIs for social auth and cross-platform content sharing",
-      "Built event import system pulling live events from Eventbrite and Posh APIs",
-      "Developed complete event management and ticketing system with Stripe Connect for multi-party payouts",
-      "Deployed and managed backend on AWS including EC2, S3, and IAM configuration",
-      "Implemented rate limiting and abuse prevention for community platform security",
-    ],
-    results: [
-      "Complex full-stack platform delivered as primary engineer",
-      "Full third-party ecosystem integrated — social auth, event imports, live audio, and payments all in production",
-      "Stripe Connect ticketing and payout system with zero payment failures",
-      "Rate limiting and abuse prevention implemented before launch",
-    ],
-  },
-  {
-    project: 'Famiglia Doro',
-    tagline: 'Creator Marketplace, Social Platform & Event Ecosystem',
-    url: 'https://famigliadoro.com',
-    color: 'from-pink-500 to-purple-600',
-    stack: ['Node.js', 'Express.js', 'MongoDB', 'AWS', 'Stripe Connect', 'WebSockets', 'OAuth2'],
-    problem: "A platform combining a social network, creator marketplace, and event management system simultaneously is one of the more complex backend challenges to get right. Each layer has its own data relationships and real-time requirements — a social feed with posts, stories, reels, likes, comments, and friend requests needs to feel instant, while e-commerce with multi-state order management, event ticketing with multi-party payment flows, and real-time messaging all need to run reliably under the same infrastructure.",
-    solution: "The backend was built with Node.js and Express, with MongoDB handling the data layer using schema patterns designed for the platform's social and commercial complexity. The social layer included posts, stories, reels, likes, comments, and a mutual friend request system backed by efficient APIs designed to handle feed generation at scale.\n\nStripe Connect was integrated for multi-party marketplace payments — handling transactions between creators and the platform with proper payout logic, webhook handling, and order state management. The full backend was deployed on AWS using EC2, S3, and IAM for secure access control.",
-    responsibilities: [
-      "Designed and built REST APIs for social networking, e-commerce, event management, and content feeds using Node.js",
-      "Built complete social layer including posts, stories, reels, likes, comments, and mutual friend request system",
-      "Built full e-commerce module including product listings, order management, coupon logic, and multi-state order handling",
-      "Integrated Stripe Connect for multi-party marketplace payments, creator payouts, and webhook handling",
-      "Built event management and ticketing system with integrated payment flows",
-      "Implemented WebSocket-based real-time messaging for one-to-one and group chat",
-      "Deployed and managed full AWS infrastructure including EC2, S3, and IAM configuration",
-      "Designed MongoDB schema architecture for relational complexity across users, products, orders, and events",
-    ],
-    results: [
-      "Complete backend delivered: social networking, e-commerce, events, and payments",
-      "Full social platform live with posts, stories, reels, and friend connections",
-      "Stripe Connect payment flows operational with reliable payout handling",
-      "Scalable AWS infrastructure configured for production load",
-    ],
+    stack: ['React Native WebRTC', 'Daily SDK', 'AVAudioSession', 'Track Player'],
+    body: "Daily SDK and React Native WebRTC forced an AVAudioSession mode that killed background music in workout classes. I studied Apple docs and GitHub issues, patched React Native WebRTC to override the audio session mode, and resolved race conditions between React Native Track Player and the VoIP stream.",
+    visual: 'audio',
   },
 ];
 
-function CaseStudyCard({ c, isOpen, onToggle }) {
-  return (
-    <div className={`bg-white rounded-2xl overflow-hidden border transition-all duration-200 ${isOpen ? 'border-indigo-200 card-shadow-hover' : 'border-slate-100 card-shadow hover:border-indigo-100'}`}>
-      <button className="w-full text-left p-6 flex items-start justify-between gap-4" onClick={onToggle}>
-        <div className="flex items-start gap-4">
-          <div className={`w-1 self-stretch rounded-full bg-gradient-to-b ${c.color} shrink-0`} />
-          <div>
-            <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="text-slate-900 font-bold text-lg">{c.project}</h3>
-              <a href={c.url} target="_blank" rel="noreferrer"
-                onClick={e => e.stopPropagation()}
-                className="text-slate-300 hover:text-indigo-500 transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-            </div>
-            <p className="text-slate-400 text-sm">{c.tagline}</p>
-          </div>
-        </div>
-        <svg className={`w-5 h-5 text-indigo-400 shrink-0 mt-1 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-          fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+const more = [
+  {
+    title: 'Custom Expo config plugin',
+    project: 'Budget Nest',
+    stack: ['Expo Config Plugins', 'App Intents', 'Swift'],
+    body: "Kept native iOS extensions (App Intents) intact through expo prebuild, so the team could stay on the managed Expo workflow without losing native features.",
+  },
+  {
+    title: 'Android memory leak',
+    project: 'Code Huddle',
+    stack: ['Android Studio Profiler', 'Heap Snapshots'],
+    body: "Diagnosed a memory leak with Android Studio Profiler heap snapshots, traced it to its source and fixed it.",
+  },
+  {
+    title: 'React Native 0.74 to 0.82',
+    project: 'Code Huddle',
+    stack: ['New Architecture', 'React Native'],
+    body: "Moved the app to the New Architecture and replaced unmaintained libraries with supported alternatives.",
+  },
+  {
+    title: 'Subscription billing accuracy',
+    project: 'Code Huddle',
+    stack: ['Google Play Billing', 'Google Cloud Pub/Sub'],
+    body: "Routed Google Play subscription events to the backend through Google Cloud Pub/Sub so billing state stays correct.",
+  },
+];
 
-      {isOpen && (
-        <div className="px-6 pb-8 border-t border-slate-100">
-          <div className="flex flex-wrap gap-1.5 py-4 mb-2">
-            {c.stack.map(tag => (
-              <span key={tag} className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs rounded-lg font-mono">{tag}</span>
+const START = 180;
+
+function useCountdown() {
+  const [left, setLeft] = useState(START);
+  useEffect(() => {
+    const id = setInterval(() => setLeft(s => (s <= 1 ? START : s - 1)), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const m = String(Math.floor(left / 60)).padStart(2, '0');
+  const s = String(left % 60).padStart(2, '0');
+  return { label: `${m}:${s}`, progress: left / START };
+}
+
+function IslandVisual() {
+  const { label, progress } = useCountdown();
+  return (
+    <figure className="relative h-full min-h-[340px] flex flex-col items-center justify-center gap-6 px-6 py-10 bg-[radial-gradient(120%_80%_at_50%_0%,#262A31_0%,#121418_70%)]">
+      <div className="flex items-center gap-3 h-11 pl-1.5 pr-4 rounded-full bg-black shadow-[0_10px_30px_-10px_rgba(0,0,0,0.9)]" aria-hidden="true">
+        <span className="w-8 h-8 rounded-full bg-emerald-500/90 grid place-items-center">
+          <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M15 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1v-3.5l4 3.5V7l-4 3.5z" /></svg>
+        </span>
+        <span className="text-[13px] text-white/70">One on one</span>
+        <span className="text-[15px] font-semibold text-emerald-400 tabular">{label}</span>
+      </div>
+      <div className="w-full max-w-[300px] rounded-[22px] bg-white/[0.08] backdrop-blur p-4 ring-1 ring-white/10" aria-hidden="true">
+        <div className="flex items-center justify-between">
+          <span className="text-[13px] text-white/60">Incoming call</span>
+          <span className="text-[13px] text-white/60">Lock screen</span>
+        </div>
+        <p className="mt-2 text-white font-semibold">Your one on one starts in</p>
+        <p className="font-display text-4xl font-semibold text-white tracking-tight">{label}</p>
+        <div className="mt-3 h-1 rounded-full bg-white/15 overflow-hidden">
+          <div className="h-full bg-emerald-400 transition-[width] duration-1000 ease-linear" style={{ width: `${progress * 100}%` }} />
+        </div>
+      </div>
+      <figcaption className="text-xs text-bone-faint">Illustration of the Live Activity layout</figcaption>
+    </figure>
+  );
+}
+
+const bars = Array.from({ length: 28 }, (_, i) => i);
+
+function AudioVisual() {
+  const tracks = [
+    { label: 'Workout music', color: '#F6C430', speed: 1.1 },
+    { label: 'Live call audio', color: '#7DD3A8', speed: 0.8 },
+  ];
+  return (
+    <figure className="relative h-full min-h-[340px] flex flex-col justify-center gap-7 px-8 py-10 bg-[radial-gradient(120%_80%_at_50%_0%,#262A31_0%,#121418_70%)]">
+      {tracks.map((t, ti) => (
+        <div key={t.label} aria-hidden="true">
+          <p className="text-[13px] text-white/60 mb-3">{t.label}</p>
+          <div className="flex items-center gap-[3px] h-14">
+            {bars.map(i => (
+              <span key={i} className="flex-1 rounded-full origin-center motion-safe:animate-[meter_1.2s_ease-in-out_infinite]"
+                style={{
+                  backgroundColor: t.color,
+                  height: `${30 + ((i * 37 + ti * 53) % 70)}%`,
+                  animationDelay: `${-((i * 0.13 + ti * 0.4) % 1.2)}s`,
+                  animationDuration: `${t.speed + (i % 5) * 0.12}s`,
+                }} />
             ))}
           </div>
-
-          <div className="space-y-6">
-            <div>
-              <h4 className="text-indigo-600 text-xs font-bold uppercase tracking-widest mb-3">The Problem</h4>
-              <div className="text-slate-600 text-sm leading-relaxed space-y-3">
-                {c.problem.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
-              </div>
-            </div>
-            <div>
-              <h4 className="text-indigo-600 text-xs font-bold uppercase tracking-widest mb-3">The Solution</h4>
-              <div className="text-slate-600 text-sm leading-relaxed space-y-3">
-                {c.solution.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
-              </div>
-            </div>
-            <div>
-              <h4 className="text-indigo-600 text-xs font-bold uppercase tracking-widest mb-3">Responsibilities</h4>
-              <ul className="space-y-2">
-                {c.responsibilities.map((r, i) => (
-                  <li key={i} className="flex gap-2 text-slate-600 text-sm leading-relaxed">
-                    <span className="text-indigo-400 shrink-0 mt-0.5">▹</span>
-                    <span>{r}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="p-4 rounded-xl bg-indigo-50 border border-indigo-100">
-              <h4 className="text-indigo-600 text-xs font-bold uppercase tracking-widest mb-3">Results</h4>
-              <ul className="space-y-1.5">
-                {c.results.map((r, i) => (
-                  <li key={i} className="flex gap-2 text-slate-700 text-sm font-medium">
-                    <span className="text-indigo-500 font-bold shrink-0">✓</span>{r}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
-      )}
-    </div>
+      ))}
+      <figcaption className="text-xs text-bone-faint">Illustration: music and call audio playing at the same time</figcaption>
+    </figure>
   );
 }
 
 export default function CaseStudies() {
-  const [openIndex, setOpenIndex] = useState(null);
   return (
-    <section id="casestudies" className="py-24 px-6 bg-slate-50">
-      <div className="max-w-6xl mx-auto">
-        <p className="text-indigo-600 text-xs font-bold tracking-widest uppercase mb-3">Deep Dives</p>
-        <h2 className="text-4xl font-extrabold text-slate-900 mb-4">Case Studies</h2>
-        <p className="text-slate-500 text-base mb-12 max-w-xl">
-          What broke, how I debugged it, and what shipped.
-        </p>
-        <div className="space-y-4">
-          {cases.map((c, i) => (
-            <CaseStudyCard key={i} c={c} isOpen={openIndex === i} onToggle={() => setOpenIndex(openIndex === i ? null : i)} />
+    <section id="highlights" className="py-28 md:py-40">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
+        <div className="mb-14 md:mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <h2 className="font-display font-bold tracking-tightest leading-[0.95] text-bone text-[clamp(2.5rem,6vw,4.5rem)] max-w-3xl text-balance">Hard problems I solved</h2>
+          <p className="max-w-sm text-bone-muted leading-relaxed">What broke, how I worked it out, and what shipped.</p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-4">
+          {featured.map(f => (
+            <article key={f.title} className="rounded-[28px] overflow-hidden bg-ink-raised ring-1 ring-ink-line flex flex-col">
+              <div className="h-[340px]">
+                {f.visual === 'island' ? <IslandVisual /> : <AudioVisual />}
+              </div>
+              <div className="p-7 md:p-9 flex-1 flex flex-col">
+                <p className="text-sm text-bone-faint">{f.project}</p>
+                <h3 className="mt-2 font-display text-2xl md:text-[1.75rem] font-semibold tracking-tight text-bone text-balance">{f.title}</h3>
+                <p className="mt-4 text-bone-muted leading-relaxed text-pretty">{f.body}</p>
+                <p className="mt-6 pt-5 border-t border-ink-line text-sm text-bone-faint">{f.stack.join(' · ')}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-4 rounded-[28px] bg-ink-raised ring-1 ring-ink-line divide-y divide-ink-line">
+          {more.map(m => (
+            <article key={m.title} className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] gap-3 md:gap-10 p-7 md:p-9">
+              <div>
+                <p className="text-sm text-bone-faint">{m.project}</p>
+                <h3 className="mt-1.5 font-display text-xl md:text-2xl font-semibold tracking-tight text-bone">{m.title}</h3>
+              </div>
+              <div>
+                <p className="text-bone-muted leading-relaxed text-pretty">{m.body}</p>
+                <p className="mt-3 text-sm text-bone-faint">{m.stack.join(' · ')}</p>
+              </div>
+            </article>
           ))}
         </div>
       </div>
